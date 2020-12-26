@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "build": "next build && next export",
+    "start": "next start",
+    "deploy": "npm run build && aws s3 sync out/ s3://hydroponics-rost-home/ --acl public-read"
   },
   "dependencies": {
+    "dayjs": "^1.9.7",
     "next": "10.0.4",
     "react": "17.0.1",
     "react-dom": "17.0.1"
