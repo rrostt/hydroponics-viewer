@@ -1,100 +1,110 @@
 import { useEffect, useState, useCallback } from 'react'
-import { CSSTransition } from 'react-transition-group'
 
 import styles from '../styles/Home.module.css'
+
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(isBetween)
 dayjs.extend(utc)
 
-const imagesUrl = process.env.NEXT_PUBLIC_API_IMAGES
+import Anim from '../components/Anim'
+import useHash from '../hooks/useHash'
 
-const useImages = ({ from, to }) => {
+// eslint-disable-next-line no-undef
+const imagesUrl = process.env.NEXT_PUBLIC_API_IMAGES
+// eslint-disable-next-line no-undef
+const latestUrl = process.env.NEXT_PUBLIC_API_LATEST
+
+const useImages = ({ from, to, plantId }) => {
   const [images, setImages] = useState([])
 
-  useEffect(() => {
-    fetch(`${imagesUrl}?from=${from}&to=${to}`)
+  const fetchImages = useCallback(() =>
+    fetch(`${imagesUrl}?from=${from}&to=${to}&plantId=${plantId || ''}`)
       .then(response => response.json())
       .then(images => setImages(images))
+    , [from, to])
+
+  useEffect(() => {
+    fetchImages()
   }, [])
+
+  useEffect(() => {
+    const interval = setInterval(fetchImages, 1000 * 60 * 1) // every minute
+    return () => clearInterval(interval)
+  }, [fetchImages])
 
   return images
 }
 
-const Anim = ({ images }) => {
-  const [frame, setFrame] = useState(0)
-  const [playing, setPlaying] = useState(true)
 
-  const nextFrame = useCallback(() => {
-    if (images.length > 0) {
-      setFrame(frame => (frame + 1) % images.length)
-    }
-  }, [images, setFrame, playing])
-
-  const onChange = useCallback(e => {
-    setPlaying(false)
-    setFrame(+e.target.value)
-  }, [setPlaying, setFrame])
-
-  const onClick = useCallback(e => {
-    setPlaying(playing => !playing)
-  }, [setPlaying])
-
-  useEffect(() => {
-    if (playing) {
-      const interval = setInterval(nextFrame, 50)
-      return () => clearInterval(interval)
-    }
-  }, [playing, nextFrame])
-
-  if (images.length == 0) {
-    return <div>Loading...</div>
-  }
-
-  return <div>
-    <div onClick={onClick} style={{ position: 'relative' }}>
-      <img className={styles.frameImage} src={images[frame % images.length].url} />
-      <div className={styles.datestamp}><div className={styles.datestampContent}>{dayjs(images[frame % images.length].time).format('YYYY-MM-DD HH:mm')}</div></div>
-      <div className={styles.playbutton} style={{
-        position: 'absolute',
-        top: 0,
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-end',
-        alignItems: 'stretch'
-      }}>
-        <div className={styles.sliderContainer}>
-          <div className={styles.sliderContainerInner}>
-            {images.filter((_, i) => i % 3 === 0).map(({ url }) => <img className={styles.sliderThumbnail} style={{ width: `${100 / Math.ceil(images.length / 3)}%` }} src={url} />)}
-            <input className={styles.slider} type='range' min={0} max={images.length - 1} value={frame} onChange={onChange} /><br />
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-}
-
-export default function Home() {
+const Plant = ({ plantId }) => {
   const from = '2020-12-24' // dayjs.utc().startOf('day').subtract(2, 'day').format() // '2020-12-23'
   const to = dayjs.utc().endOf('day').format() // '2020-12-24'
 
   const [days, setDays] = useState(5)
 
-  const images = useImages({ from, to })
-  const showImages = images.filter(({ time }) => dayjs(time).isBetween(dayjs(to).subtract(days, 'day'), to))
+  const images = useImages({ from, to, plantId: +plantId || '' })
+
+  const showFrom = dayjs(to).subtract(days, 'day')
+  const showTo = to
+  const showImages = images.filter(({ time }) => dayjs(time).isBetween(showFrom, showTo))
 
   return (
     <div className={styles.container}>
-      <Anim images={showImages} />
+      { showImages.length > 0 ? <Anim images={showImages} /> : null}
       <br />
       <br />
       <br />
       Show days {days}
-      <input type="range" min="1" max="10" value={days} onChange={(e) => setDays(+e.target.value)} />
+      <input type="range" min="1" max="30" value={days} onChange={(e) => setDays(+e.target.value)} />
     </div>
   )
 }
+
+const PlantThumb = ({ plantId }) => {
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    fetch(`${latestUrl}?plantId=${+plantId || ''}`)
+      .then(response => response.json())
+      .then(data => setData(data))
+  }, [plantId])
+
+  if (data === null) {
+    return <div className={styles.plantThumb}>Loading</div>
+  }
+
+  const date = dayjs(data.time).format("YYYY-MM-DD")
+  const time = dayjs(data.time).format("HH:mm")
+
+  return <a href={`#${plantId}`}>
+    <div className={styles.plantThumb} style={{ backgroundImage: `url(${data.url})` }}>
+      {date}<br />{time}
+    </div>
+  </a>
+}
+
+const Home = () => {
+  let plantId
+
+  const hash = useHash()
+  if (hash != '') plantId = hash
+  console.log({ hash })
+
+  if (plantId) {
+    return <Plant plantId={plantId} />
+  }
+
+  console.log('listing plants')
+
+  const plantIds = ['0', '4', '2']
+
+  return <div className={styles.container}>
+    {plantIds.map(plantId =>
+      <PlantThumb key={`thumb_${plantId}`} plantId={plantId} />
+    )}
+  </div>
+}
+
+export default Home
