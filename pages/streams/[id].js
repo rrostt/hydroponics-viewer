@@ -8,7 +8,7 @@ const StreamPage = () => {
 
   console.log({id })
 
-  return <Stream streamId={id && id[0]} />
+  return <Stream streamId={id} />
 }
 
 export default StreamPage

@@ -8,7 +8,7 @@ import utc from 'dayjs/plugin/utc'
 dayjs.extend(isBetween)
 dayjs.extend(utc)
 
-import { GoogleLogin, GoogleLogout } from 'react-google-login'
+import { GoogleLogin, GoogleLogout, useGoogleLogout } from 'react-google-login'
 
 import Dashboard from '../views/Dashboard'
 
@@ -18,7 +18,7 @@ import Dashboard from '../views/Dashboard'
 
 import { fetchToken } from '../services/api'
 
-const GOOGLE_CLIENT_ID = `804478743579-a5999sgljs52e98i57p1i7u2v889nt8b.apps.googleusercontent.com`
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
 
 // eslint-disable-next-line no-undef
 
@@ -48,7 +48,12 @@ import AuthContext from '../contexts/auth'
 
 const Home = () => {
   const { token, setToken } = useContext(AuthContext)
-
+  const { signOut } = useGoogleLogout({
+    clientId: GOOGLE_CLIENT_ID,
+    onLogoutSuccess: () => {
+      setToken(null)
+    },
+  })
   const onSuccess = res => {
     console.log('logged in', res)
     fetchToken(res.tokenId)
@@ -69,12 +74,11 @@ const Home = () => {
   // }
 
   if (token) {
-    return <Dashboard />
+    return <><button onClick={signOut}>hello</button><Dashboard /></>
   }
 
   return <GoogleLogin
     clientId={GOOGLE_CLIENT_ID}
-    buttonText="Login"
     onSuccess={onSuccess}
     onFailed={onFailure}
     isSignedIn={true} />
