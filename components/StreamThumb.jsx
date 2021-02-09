@@ -19,7 +19,7 @@ const StreamThumb = ({ stream }) => {
   return <a href={`/stream?id=${stream.id}`}>
     <div className={styles.streamThumb}>
       { stream.latest ? <WithLatest stream={stream} /> : <WithoutLatest />}
-      {stream.title}
+      <div className={styles.streamThumbTitle}>{stream.title}</div>
     </div>
   </a>
 }

@@ -5,6 +5,7 @@ const REGISTER_STREAM_URL = `${API_BASE}/streams`
 const GET_TOKEN = `${API_BASE}/token`
 const GET_IMAGES = (streamId, from, to) => `${API_BASE}/streams/${streamId}/images?from=${from}&to=${to}`
 const STREAM_INFO_URL = streamId => `${API_BASE}/streams/${streamId}`
+const UPDATE_STREAM = `${API_BASE}/streams`
 
 export const fetchStreams = ({ token }) =>
   fetch(
@@ -78,3 +79,16 @@ export const fetchImages = ({ token, streamId, from, to }) =>
     }
   )
   .then(response => response.json())
+
+export const updateStream = ({ token, streamId, title, description }) =>
+  fetch(
+    UPDATE_STREAM,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ id: streamId, title, description })
+    }
+  )

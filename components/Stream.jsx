@@ -4,17 +4,14 @@ import dayjs from 'dayjs'
 import Anim from './Anim'
 
 import useAuthToken from '../hooks/useAuthToken'
-import { fetchImages, fetchStreamInfo, } from '../services/api'
+import useStreamInfo from '../hooks/api/useStreamInfo'
+import { fetchImages, } from '../services/api'
 
 import styles from '../styles/Home.module.css'
-
-// eslint-disable-next-line no-undef
 
 const useImages = ({ from, to, streamId }) => {
   const token = useAuthToken()
   const [images, setImages] = useState([])
-
-  console.log('useimages', streamId)
 
   const doFetchImages = useCallback(() =>
     fetchImages({ token, streamId, from, to })
@@ -33,16 +30,6 @@ const useImages = ({ from, to, streamId }) => {
   return images
 }
 
-const useStreamInfo = ({ streamId }) => {
-  const token = useAuthToken()
-  const [info, setInfo] = useState(null)
-  useEffect(() => {
-    fetchStreamInfo({ token, streamId })
-      .then(info => setInfo(info))
-  }, [streamId])
-  return info
-}
-
 const Stream = ({ streamId }) => {
   const from = '2020-12-24' // dayjs.utc().startOf('day').subtract(2, 'day').format() // '2020-12-23'
   const to = dayjs.utc().endOf('day').format() // '2020-12-24'
@@ -58,6 +45,7 @@ const Stream = ({ streamId }) => {
 
   return <div className={styles.container}>
       <h1>{ info && info.title }</h1>
+      { info && info.owner && <div style={{ paddingBottom: 20 }}><a href={`/stream/edit?id=${streamId}`}>edit</a></div>}
       { showImages.length > 0 ? <Anim images={showImages} /> : null}
       <p>{ info && info.description }</p>
       <br />

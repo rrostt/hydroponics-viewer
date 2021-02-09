@@ -1,4 +1,4 @@
-import Stream from '../components/Stream'
+import EditStream from '../../components/EditStream'
 
 const getSearchParam = name => {
   if (typeof window === 'undefined') {
@@ -9,12 +9,11 @@ const getSearchParam = name => {
   return urlParams.get(name)
 }
 
-const StreamPage = () => {
+const EditStreamPage = () => {
+  // const { id } = query
   const id = getSearchParam('id')
 
-  console.log({id })
-
-  return <Stream streamId={id} />
+  return <EditStream streamId={id} />
 }
 
-export default StreamPage
+export default EditStreamPage

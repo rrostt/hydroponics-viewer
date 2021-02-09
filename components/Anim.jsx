@@ -45,11 +45,6 @@ const Anim = ({ images }) => {
     }
   }, [playing, frame, images])
 
-  const goBack = () => {
-    // window.location.hash = ''
-    window.history.back()
-  }
-
   if (images.length == 0) {
     return <div>Loading...</div>
   }
@@ -58,7 +53,6 @@ const Anim = ({ images }) => {
     <div onClick={onClick} style={{ position: 'relative' }}>
       <img className={styles.frameImage} src={images[frame % images.length].url} />
       <div className={styles.datestamp}><div className={styles.datestampContent}>{dayjs(images[frame % images.length].time).format('YYYY-MM-DD HH:mm')}</div></div>
-      <div className={styles.animBackbutton} onClick={() => goBack()}>&larr;</div>
       <div className={styles.controlbar}>
         <div className={styles.sliderContainer}>
           <div className={styles.sliderContainerInner}>

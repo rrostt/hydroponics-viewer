@@ -1,14 +1,14 @@
-import { useState, useContext } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
-import AuthContext from '../../contexts/auth'
+import useAuthToken from '../../hooks/useAuthToken'
 
 import styles from '../../styles/AddStream.module.css'
 
 import { registerStream } from '../../services/api'
 
-const AddStream = () => {
+const AddStreamPage = () => {
   const router = useRouter()
-  const { token } = useContext(AuthContext)
+  const token = useAuthToken()
 
   const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
@@ -19,10 +19,16 @@ const AddStream = () => {
   }
 
   return <div className={styles.addStream}>
+    <h1>Add stream</h1>
+    <p>Excellent, you are about to start streaming something slowly.</p>
+    <p>
+      A stream is a series of images, typically spaced out over a significant period of time.
+    </p>
     <input placeholder='Title' value={title} onChange={e => setTitle(e.target.value)} />
-    <input placeholder='Description' value={desc} onChange={e => setDesc(e.target.value)} />
+    <textarea placeholder='Description' value={desc} onChange={e => setDesc(e.target.value)} />
     <button onClick={submit}>Save</button>
+    <div className={styles.bottom}><img src='/undraw_videographer.svg' /></div>
   </div>
 }
 
-export default AddStream
+export default AddStreamPage
