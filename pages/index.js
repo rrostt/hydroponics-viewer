@@ -48,6 +48,7 @@ import AuthContext from '../contexts/auth'
 
 const Home = () => {
   const { token, setToken } = useContext(AuthContext)
+  const [ error, setError ] = useState(null)
   const { signOut } = useGoogleLogout({
     clientId: GOOGLE_CLIENT_ID,
     onLogoutSuccess: () => {
@@ -67,6 +68,7 @@ const Home = () => {
 
   const onFailure = res => {
     console.log('loggin failed', res)
+    setError(res)
   }
 
   // const onLogout = () => {
@@ -75,6 +77,10 @@ const Home = () => {
 
   if (token) {
     return <><button onClick={signOut}>hello</button><Dashboard /></>
+  }
+
+  if (error) {
+    return <>Error {error}</>
   }
 
   return <GoogleLogin
