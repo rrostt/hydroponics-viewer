@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import Anim from './Anim'
 
 import useAuthToken from '../hooks/useAuthToken'
-import { fetchImages } from '../services/api'
+import { fetchImages, fetchStreamInfo, } from '../services/api'
 
 import styles from '../styles/Home.module.css'
 
@@ -33,12 +33,23 @@ const useImages = ({ from, to, streamId }) => {
   return images
 }
 
+const useStreamInfo = ({ streamId }) => {
+  const token = useAuthToken()
+  const [info, setInfo] = useState(null)
+  useEffect(() => {
+    fetchStreamInfo({ token, streamId })
+      .then(info => setInfo(info))
+  }, [streamId])
+  return info
+}
+
 const Stream = ({ streamId }) => {
   const from = '2020-12-24' // dayjs.utc().startOf('day').subtract(2, 'day').format() // '2020-12-23'
   const to = dayjs.utc().endOf('day').format() // '2020-12-24'
 
   const [days, setDays] = useState(5)
 
+  const info = useStreamInfo({ streamId })
   const images = useImages({ from, to, streamId: streamId || '' })
 
   const showFrom = dayjs(to).subtract(days, 'day')
@@ -46,7 +57,9 @@ const Stream = ({ streamId }) => {
   const showImages = images.filter(({ time }) => dayjs(time).isBetween(showFrom, showTo))
 
   return <div className={styles.container}>
+      <h1>{ info && info.title }</h1>
       { showImages.length > 0 ? <Anim images={showImages} /> : null}
+      <p>{ info && info.description }</p>
       <br />
       <br />
       <br />
