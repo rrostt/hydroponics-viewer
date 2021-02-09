@@ -1,5 +1,6 @@
 const API_BASE = process.env.NEXT_PUBLIC_API
 const STREAMS_URL = `${API_BASE}/streams`
+const FEATURED_URL = `${API_BASE}/featured`
 const REGISTER_STREAM_URL = `${API_BASE}/streams`
 const GET_TOKEN = `${API_BASE}/token`
 const GET_IMAGES = (streamId, from, to) => `${API_BASE}/stream/${streamId}/images?from=${from}&to=${to}`
@@ -7,6 +8,17 @@ const GET_IMAGES = (streamId, from, to) => `${API_BASE}/stream/${streamId}/image
 export const fetchStreams = ({ token }) =>
   fetch(
     STREAMS_URL,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+    .then(response => response.json())
+
+export const fetchFeatured = ({ token }) =>
+  fetch(
+    FEATURED_URL,
     {
       headers: {
         Authorization: `Bearer ${token}`
