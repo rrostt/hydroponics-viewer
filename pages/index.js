@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useContext, useEffect, useState, useCallback } from 'react'
 
 import styles from '../styles/Home.module.css'
 
@@ -8,103 +8,76 @@ import utc from 'dayjs/plugin/utc'
 dayjs.extend(isBetween)
 dayjs.extend(utc)
 
-import Anim from '../components/Anim'
-import useHash from '../hooks/useHash'
+import { GoogleLogin, GoogleLogout } from 'react-google-login'
+
+import Dashboard from '../views/Dashboard'
+
+// import Plant from '../components/Stream'
+// import PlantThumb from '../components/PlantThumb'
+// import useHash from '../hooks/useHash'
+
+import { fetchToken } from '../services/api'
+
+const GOOGLE_CLIENT_ID = `804478743579-a5999sgljs52e98i57p1i7u2v889nt8b.apps.googleusercontent.com`
 
 // eslint-disable-next-line no-undef
-const imagesUrl = process.env.NEXT_PUBLIC_API_IMAGES
-// eslint-disable-next-line no-undef
-const latestUrl = process.env.NEXT_PUBLIC_API_LATEST
 
-const useImages = ({ from, to, plantId }) => {
-  const [images, setImages] = useState([])
+// const PlantList = () => {
+//   let plantId
 
-  const fetchImages = useCallback(() =>
-    fetch(`${imagesUrl}?from=${from}&to=${to}&plantId=${plantId || ''}`)
-      .then(response => response.json())
-      .then(images => setImages(images))
-    , [from, to])
+//   const hash = useHash()
+//   if (hash != '') plantId = hash
+//   console.log({ hash })
 
-  useEffect(() => {
-    fetchImages()
-  }, [])
+//   if (plantId) {
+//     return <Plant plantId={plantId} />
+//   }
 
-  useEffect(() => {
-    const interval = setInterval(fetchImages, 1000 * 60 * 1) // every minute
-    return () => clearInterval(interval)
-  }, [fetchImages])
+//   console.log('listing plants')
 
-  return images
-}
+//   const plantIds = ['0', '4', '2']
 
+//   return <div className={styles.container}>
+//     {plantIds.map(plantId =>
+//       <PlantThumb key={`thumb_${plantId}`} plantId={plantId} />
+//     )}
+//   </div>
+// }
 
-const Plant = ({ plantId }) => {
-  const from = '2020-12-24' // dayjs.utc().startOf('day').subtract(2, 'day').format() // '2020-12-23'
-  const to = dayjs.utc().endOf('day').format() // '2020-12-24'
-
-  const [days, setDays] = useState(5)
-
-  const images = useImages({ from, to, plantId: +plantId || '' })
-
-  const showFrom = dayjs(to).subtract(days, 'day')
-  const showTo = to
-  const showImages = images.filter(({ time }) => dayjs(time).isBetween(showFrom, showTo))
-
-  return (
-    <div className={styles.container}>
-      { showImages.length > 0 ? <Anim images={showImages} /> : null}
-      <br />
-      <br />
-      <br />
-      Show days {days}
-      <input type="range" min="1" max="30" value={days} onChange={(e) => setDays(+e.target.value)} />
-    </div>
-  )
-}
-
-const PlantThumb = ({ plantId }) => {
-  const [data, setData] = useState(null)
-
-  useEffect(() => {
-    fetch(`${latestUrl}?plantId=${+plantId || ''}`)
-      .then(response => response.json())
-      .then(data => setData(data))
-  }, [plantId])
-
-  if (data === null) {
-    return <div className={styles.plantThumb}>Loading</div>
-  }
-
-  const date = dayjs(data.time).format("YYYY-MM-DD")
-  const time = dayjs(data.time).format("HH:mm")
-
-  return <a href={`#${plantId}`}>
-    <div className={styles.plantThumb} style={{ backgroundImage: `url(${data.url})` }}>
-      {date}<br />{time}
-    </div>
-  </a>
-}
+import AuthContext from '../contexts/auth'
 
 const Home = () => {
-  let plantId
+  const { token, setToken } = useContext(AuthContext)
 
-  const hash = useHash()
-  if (hash != '') plantId = hash
-  console.log({ hash })
-
-  if (plantId) {
-    return <Plant plantId={plantId} />
+  const onSuccess = res => {
+    console.log('logged in', res)
+    fetchToken(res.tokenId)
+      .then(token => {
+        if (token.token) {
+          console.log('got token', token.token)
+          setToken(token.token)
+        }
+      })
   }
 
-  console.log('listing plants')
+  const onFailure = res => {
+    console.log('loggin failed', res)
+  }
 
-  const plantIds = ['0', '4', '2']
+  // const onLogout = () => {
+  //   setToken(null)
+  // }
 
-  return <div className={styles.container}>
-    {plantIds.map(plantId =>
-      <PlantThumb key={`thumb_${plantId}`} plantId={plantId} />
-    )}
-  </div>
+  if (token) {
+    return <Dashboard />
+  }
+
+  return <GoogleLogin
+    clientId={GOOGLE_CLIENT_ID}
+    buttonText="Login"
+    onSuccess={onSuccess}
+    onFailed={onFailure}
+    isSignedIn={true} />
 }
 
 export default Home

@@ -112,3 +112,7 @@
   background: black;
   border-radius: 25px;
 }
+
+.animBackbutton:hover {
+  cursor: pointer;
+}

@@ -46,7 +46,8 @@ const Anim = ({ images }) => {
   }, [playing, frame, images])
 
   const goBack = () => {
-    window.location.hash = ''
+    // window.location.hash = ''
+    window.history.back()
   }
 
   if (images.length == 0) {
