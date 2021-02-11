@@ -6,7 +6,9 @@ import utc from 'dayjs/plugin/utc'
 dayjs.extend(isBetween)
 dayjs.extend(utc)
 
-import { GoogleLogin, useGoogleLogout } from 'react-google-login'
+import styles from '../styles/Home.module.css'
+
+import { useGoogleLogout, useGoogleLogin } from 'react-google-login'
 
 import Dashboard from '../views/Dashboard'
 
@@ -16,24 +18,21 @@ const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
 
 import AuthContext from '../contexts/auth'
 
-const Home = () => {
-  const { token, setToken } = useContext(AuthContext)
+const SignIn = () => {
+  const { setToken } = useContext(AuthContext)
+  const [loading, setLoading] = useState(false)
   const [ error, setError ] = useState(null)
-  const { signOut } = useGoogleLogout({
-    clientId: GOOGLE_CLIENT_ID,
-    onLogoutSuccess: () => {
-      setToken(null)
-    },
-  })
   const onSuccess = res => {
-    console.log('logged in', res)
+    setLoading(true)
+    res.disconnect()
     fetchToken(res.tokenId)
       .then(token => {
         if (token.token) {
-          console.log('got token', token.token)
           setToken(token.token)
         }
       })
+      .catch(() => {})
+      .then(() => setLoading(false))
   }
 
   const onFailure = res => {
@@ -41,22 +40,46 @@ const Home = () => {
     setError(res)
   }
 
-  if (token) {
-    return <>
-      <Dashboard />
-      <div onClick={signOut}>Logout</div>
-    </>
-  }
+  const { signIn } = useGoogleLogin({
+    clientId: GOOGLE_CLIENT_ID,
+    onSuccess,
+    onFailure,
+  })
 
   if (error) {
     return <>Error {error}</>
   }
 
-  return <GoogleLogin
-    clientId={GOOGLE_CLIENT_ID}
-    onSuccess={onSuccess}
-    onFailed={onFailure}
-    isSignedIn={true} />
+  return <div className={styles.loginPage}>
+    <button onClick={signIn} disabled={loading}>Sign in with Google</button>
+  </div>
+}
+
+const SignOut = () => {
+  const { setToken } = useContext(AuthContext)
+  const { signOut } = useGoogleLogout({
+    clientId: GOOGLE_CLIENT_ID,
+    onLogoutSuccess: (x) => {
+      console.log(x)
+      setToken(null)
+    },
+    onFailure: (e) => console.log('failure', e),
+  })
+  return  <div onClick={signOut}>Logout</div>
+}
+
+const Home = () => {
+  const { token } = useContext(AuthContext)
+
+  if (token) {
+    console.log('token is set')
+    return <div key='loggedin' className={styles.dashboard}>
+      <Dashboard />
+      <SignOut />
+    </div>
+  } else {
+    return <div key='signin'><SignIn /></div>
+  }
 }
 
 export default Home

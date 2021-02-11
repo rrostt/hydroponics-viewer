@@ -3,6 +3,24 @@
   margin: 0 auto;
 }
 
+.loginPage {
+  width: 100%;
+  max-width: 600px;
+  height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginPage button {
+  padding: 1rem;
+}
+
+.dashboard {
+  flex-direction: row;
+}
+
 .datestamp {
   position: absolute;
   top: 0;
