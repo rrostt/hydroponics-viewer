@@ -3,6 +3,10 @@
   margin: 0 auto;
 }
 
+.homeIndex {
+  display: flex;
+  flex-direction: column;
+}
 .loginPage {
   width: 100%;
   max-width: 600px;
@@ -18,7 +22,7 @@
 }
 
 .dashboard {
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .datestamp {
