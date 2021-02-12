@@ -1,5 +1,6 @@
 import AuthContext from '../contexts/auth'
 import useLocalStorage from '../hooks/useLocalStorage'
+import dynamic from 'next/dynamic'
 
 // setup dayjs
 import dayjs from 'dayjs'
@@ -7,6 +8,8 @@ import isBetween from 'dayjs/plugin/isBetween'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(isBetween)
 dayjs.extend(utc)
+
+const DynamicLoggedInFooter= dynamic(() => import('../components/LoggedInFooter'), { ssr: false})
 
 import '../styles/globals.css'
 
@@ -20,6 +23,7 @@ function MyApp({ Component, pageProps }) {
 
   return <AuthContext.Provider value={auth}>
     <Component {...pageProps} />
+    { token && <DynamicLoggedInFooter />}
   </AuthContext.Provider>
 }
 

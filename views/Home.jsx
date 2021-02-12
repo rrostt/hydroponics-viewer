@@ -8,7 +8,7 @@ dayjs.extend(utc)
 
 import styles from '../styles/Home.module.css'
 
-import { useGoogleLogout, useGoogleLogin } from 'react-google-login'
+import { useGoogleLogin } from 'react-google-login'
 
 import Dashboard from '../views/Dashboard'
 
@@ -55,23 +55,9 @@ const SignIn = () => {
   </div>
 }
 
-const SignOut = () => {
-  const { setToken } = useContext(AuthContext)
-  const { signOut } = useGoogleLogout({
-    clientId: GOOGLE_CLIENT_ID,
-    onLogoutSuccess: (x) => {
-      console.log(x)
-      setToken(null)
-    },
-    onFailure: (e) => console.log('failure', e),
-  })
-  return  <div onClick={signOut}>Logout</div>
-}
-
 const LoggedIn = () => {
   return <div className={styles.homeIndex}>
     <Dashboard />
-    <SignOut />
   </div>
 }
 
