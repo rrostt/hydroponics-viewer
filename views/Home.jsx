@@ -1,4 +1,4 @@
-import { useContext, useState, } from 'react'
+import { useContext, useEffect, useState, } from 'react'
 
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
@@ -25,7 +25,8 @@ const SignIn = () => {
   const [ error, setError ] = useState(null)
   const onSuccess = res => {
     setLoading(true)
-    res.disconnect()
+    console.log(res)
+    // res.disconnect()
     fetchToken(res.tokenId)
       .then(token => {
         if (token.token) {
@@ -41,11 +42,19 @@ const SignIn = () => {
     setError(res)
   }
 
-  const { signIn } = useGoogleLogin({
+  const { googleUser, isSignedIn, signIn } = useGoogleLogin({
     clientId: GOOGLE_CLIENT_ID,
+    uxMode: 'redirect'
     // onSuccess,
     // onFailure,
   })
+
+  useEffect(() => {
+    console.log({ googleUser })
+    if (isSignedIn && googleUser) {
+      onSuccess(googleUser)
+    } 
+  }, [isSignedIn])
 
   const doSignIn = async () => {
     try {
