@@ -25,8 +25,6 @@ const SignIn = () => {
   const [ error, setError ] = useState(null)
   const onSuccess = res => {
     setLoading(true)
-    console.log(res)
-    // res.disconnect()
     fetchToken(res.tokenId)
       .then(token => {
         if (token.token) {
@@ -42,11 +40,9 @@ const SignIn = () => {
     setError(res)
   }
 
-  const { googleUser, isSignedIn, signIn, signOut } = useGoogleLogin({
+  const { googleUser, isSignedIn, signIn } = useGoogleLogin({
     clientId: GOOGLE_CLIENT_ID,
     uxMode: 'redirect'
-    // onSuccess,
-    // onFailure,
   })
 
   useEffect(() => {
@@ -71,7 +67,6 @@ const SignIn = () => {
 
   return <div className={styles.loginPage}>
     <button onClick={doSignIn} disabled={loading}>Sign in with Google</button>
-    <button onClick={signOut}>SIgn out</button>
   </div>
 }
 
