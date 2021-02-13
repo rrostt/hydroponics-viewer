@@ -4,18 +4,30 @@ import useAuthToken from '../../hooks/useAuthToken'
 
 import styles from '../../styles/AddStream.module.css'
 
+import FormErrorText from '../../components/FormErrorText'
+
 import { registerStream } from '../../services/api'
 
 const AddStreamPage = () => {
   const router = useRouter()
   const token = useAuthToken()
 
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
   const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
 
   const submit = async () => {
-    await registerStream({ token, title, description: desc })
-    router.back()
+    setLoading(true)
+    setError(null)
+    try {
+      await registerStream({ token, title, description: desc })
+      router.back()
+    } catch (_) {
+      setError('something went wrong. try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return <div className={styles.addStream}>
@@ -26,7 +38,8 @@ const AddStreamPage = () => {
     </p>
     <input placeholder='Title' value={title} onChange={e => setTitle(e.target.value)} />
     <textarea placeholder='Description' value={desc} onChange={e => setDesc(e.target.value)} />
-    <button onClick={submit}>Save</button>
+    <button onClick={submit} disabled={loading}>Save</button>{ loading && '...'}
+    {error && <FormErrorText>{error}</FormErrorText>}
     <div className={styles.bottom}><img src='/undraw_videographer.svg' /></div>
   </div>
 }
