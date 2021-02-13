@@ -38,7 +38,7 @@ const Stream = ({ streamId }) => {
   const from = '2020-12-24' // dayjs.utc().startOf('day').subtract(2, 'day').format() // '2020-12-23'
   const to = dayjs.utc().endOf('day').format() // '2020-12-24'
 
-  const [days, setDays] = useState(7)
+  const days = 7
 
   const info = useStreamInfo({ streamId })
   const images = useImages({ from, to, streamId: streamId || '' })
@@ -55,8 +55,6 @@ const Stream = ({ streamId }) => {
       { showImages.length > 0 ? <Anim images={showImages} /> : null}
       { showImages.length == 0 && info?.owner && <NoImagesYet />}
       <p>{ info && info.description }</p>
-      {/* Show days {days} */}
-      {/* <input type="range" min="1" max="30" value={days} onChange={(e) => setDays(+e.target.value)} /> */}
     </div>
 }
 

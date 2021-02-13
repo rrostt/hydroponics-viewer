@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import utc from 'dayjs/plugin/utc'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
 dayjs.extend(isBetween)
 dayjs.extend(utc)
 

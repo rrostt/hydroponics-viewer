@@ -1,14 +1,16 @@
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
+import { FaRegClock } from 'react-icons/fa'
+
 import styles from '../styles/StreamThumb.module.css'
 
 const WithLatest = ({ stream }) => {
-  const date = dayjs(stream.latest.time).format("YYYY-MM-DD")
-  const time = dayjs(stream.latest.time).format("HH:mm")
+  const fromNow = dayjs(stream.latest.time).fromNow(true)
 
   return <div className={styles.streamThumbImage} style={{ backgroundImage: `url(${stream.latest.url})` }}>
-      {date}<br />{time}
+      {/* {date}<br />{time} */}
+      <div style={{ display: 'inherit', marginRight: 5 }}><FaRegClock /></div>{fromNow}
     </div>
 }
 
