@@ -1,6 +1,9 @@
 import { useState, useCallback, useEffect, } from 'react'
+import { useRouter } from 'next/router'
 import useAuthToken from '../hooks/useAuthToken'
 import { fetchStreamInfo, updateStream } from '../services/api'
+
+import styles from '../styles/EditStream.module.css'
 
 const useStreamInfo = ({ streamId }) => {
   const token = useAuthToken()
@@ -12,7 +15,7 @@ const useStreamInfo = ({ streamId }) => {
   return info
 }
 
-const Form = ({ title, description, onSave }) => {
+const Form = ({ title, description, onSave, saving }) => {
   const [titleValue, setTitle] = useState(title)
   const [descValue, setDesc] = useState(description)
 
@@ -22,14 +25,15 @@ const Form = ({ title, description, onSave }) => {
   }, [titleValue, descValue])
 
   return <form onSubmit={e => e.preventDefault()}>
-    Title <input value={titleValue} onChange={e => setTitle(e.target.value)} />
-    Description <input value={descValue} onChange={e => setDesc(e.target.value)} />
+    <input value={titleValue} onChange={e => setTitle(e.target.value)} />
+    <textarea value={descValue} onChange={e => setDesc(e.target.value)} />
 
-    <button onClick={submit}>Save</button>
+    <button onClick={submit} disabled={saving}>Save</button>{ saving && '...'}
   </form>
 }
 
 const EditStream = ({ streamId }) => {
+  const router = useRouter()
   const token = useAuthToken()
   const info = useStreamInfo({ streamId })
   const [saving, setSaving] = useState(false)
@@ -38,17 +42,20 @@ const EditStream = ({ streamId }) => {
     setSaving(true)
     try {
       await updateStream({ token, streamId, title, description })
-      window.history.back()
+      router.back()
     } catch (e) { //
       console.log(e)
     }
     setSaving(false)
   }
 
-  return <>
-    {info && <Form {...info} onSave={save} />}
-    {saving ? 'Saving...' : null}
-  </>
+  return <div className={styles.editStream}>
+    <h1>Edit stream</h1>
+    {info && <Form {...info} onSave={save} saving={saving} />}
+    <div className={styles.bottom}>
+      <img src='/undraw_Reviewed_docs.svg' />
+    </div>
+  </div>
 }
 
 export default EditStream
