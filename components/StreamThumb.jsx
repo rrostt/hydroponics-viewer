@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import Link from 'next/link'
 
 import styles from '../styles/StreamThumb.module.css'
 
@@ -16,12 +17,12 @@ const WithoutLatest = () => {
 }
 
 const StreamThumb = ({ stream }) => {
-  return <a href={`/stream?id=${stream.id}`}>
+  return <Link href={`/stream?id=${stream.id}`}>
     <div className={styles.streamThumb}>
       { stream.latest ? <WithLatest stream={stream} /> : <WithoutLatest />}
       <div className={styles.streamThumbTitle}>{stream.title}</div>
     </div>
-  </a>
+  </Link>
 }
 
 export default StreamThumb

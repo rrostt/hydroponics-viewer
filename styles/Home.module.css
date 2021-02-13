@@ -143,3 +143,12 @@
 .animBackbutton:hover {
   cursor: pointer;
 }
+
+.actionIcon {
+  margin-left: 1rem;
+  font-size: 1.5rem;
+}
+
+.actionIcon:hover {
+  cursor: pointer;
+}

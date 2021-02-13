@@ -12,7 +12,7 @@ const getSearchParam = name => {
 const StreamPage = () => {
   const id = getSearchParam('id')
 
-  console.log({id })
+  console.log({ id })
 
   return <Stream streamId={id} />
 }
