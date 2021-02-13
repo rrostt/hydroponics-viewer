@@ -42,7 +42,7 @@ const SignIn = () => {
     setError(res)
   }
 
-  const { googleUser, isSignedIn, signIn } = useGoogleLogin({
+  const { googleUser, isSignedIn, signIn, signOut } = useGoogleLogin({
     clientId: GOOGLE_CLIENT_ID,
     uxMode: 'redirect'
     // onSuccess,
@@ -71,6 +71,7 @@ const SignIn = () => {
 
   return <div className={styles.loginPage}>
     <button onClick={doSignIn} disabled={loading}>Sign in with Google</button>
+    <button onClick={signOut}>SIgn out</button>
   </div>
 }
 
