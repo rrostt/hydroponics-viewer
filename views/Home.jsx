@@ -8,7 +8,8 @@ dayjs.extend(utc)
 
 import styles from '../styles/Home.module.css'
 
-import { useGoogleLogin } from 'react-google-login'
+// import { useGoogleLogin } from 'react-google-login'
+import { useGoogleLogin } from 'react-use-googlelogin'
 
 import Dashboard from '../views/Dashboard'
 
@@ -42,16 +43,25 @@ const SignIn = () => {
 
   const { signIn } = useGoogleLogin({
     clientId: GOOGLE_CLIENT_ID,
-    onSuccess,
-    onFailure,
+    // onSuccess,
+    // onFailure,
   })
+
+  const doSignIn = async () => {
+    try {
+      const result = await signIn()
+      onSuccess(result)
+    } catch (err) {
+      onFailure(err)
+    }
+  }
 
   if (error) {
     return <>Error {error}</>
   }
 
   return <div className={styles.loginPage}>
-    <button onClick={signIn} disabled={loading}>Sign in with Google</button>
+    <button onClick={doSignIn} disabled={loading}>Sign in with Google</button>
   </div>
 }
 

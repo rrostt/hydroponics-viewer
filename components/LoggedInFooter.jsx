@@ -1,5 +1,6 @@
 import { useContext, } from 'react'
-import { useGoogleLogout, } from 'react-google-login'
+// import { useGoogleLogout, } from 'react-google-login'
+import { useGoogleLogin } from 'react-use-googlelogin'
 
 import AuthContext from '../contexts/auth'
 
@@ -10,15 +11,24 @@ const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
 
 const SignOut = () => {
   const { setToken } = useContext(AuthContext)
-  const { signOut } = useGoogleLogout({
+  const { signOut } = useGoogleLogin({
     clientId: GOOGLE_CLIENT_ID,
-    onLogoutSuccess: (x) => {
-      console.log(x)
-      setToken(null)
-    },
-    onFailure: (e) => console.log('failure', e),
+    // onLogoutSuccess: (x) => {
+    //   console.log(x)
+    //   setToken(null)
+    // },
+    // onFailure: (e) => console.log('failure', e),
   })
-  return  <div className={styles.logoutButton} onClick={signOut}>Logout</div>
+  
+  const doSignOut = async () => {
+    try {
+      await signOut()
+      setToken(null)
+    } catch (e) {
+      console.log('unable to sign out', e)
+    }
+  }
+  return  <div className={styles.logoutButton} onClick={doSignOut}>Logout</div>
 }
 
 

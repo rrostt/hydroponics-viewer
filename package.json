@@ -16,6 +16,7 @@
     "react-google-login": "^5.2.2",
     "react-icons": "^4.2.0",
     "react-transition-group": "^4.4.1",
+    "react-use-googlelogin": "^0.12.5",
     "use-hash": "^1.1.0"
   },
   "devDependencies": {
