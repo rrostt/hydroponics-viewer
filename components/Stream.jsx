@@ -8,7 +8,10 @@ import useAuthToken from '../hooks/useAuthToken'
 import useStreamInfo from '../hooks/api/useStreamInfo'
 import { fetchImages, } from '../services/api'
 
-import { FaEdit } from 'react-icons/fa'
+import {
+  FaEdit,
+  FaCloudUploadAlt,
+} from 'react-icons/fa'
 import NoImagesYet from './NoImagesYet'
 
 import styles from '../styles/Home.module.css'
@@ -51,6 +54,8 @@ const Stream = ({ streamId }) => {
       <h1>
         { info?.title }
         <Link href={`/streams/edit?id=${streamId}`}><span className={styles.actionIcon}><FaEdit /></span></Link>
+        <Link href={`/streams/upload?id=${streamId}`}><span className={styles.actionIcon}><FaCloudUploadAlt /></span></Link>
+        
       </h1>      
       { showImages.length > 0 ? <Anim images={showImages} /> : null}
       { showImages.length == 0 && info?.owner && <NoImagesYet streamId={ streamId } />}

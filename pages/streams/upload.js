@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import Link from 'next/Link'
 
+import { FaChevronLeft } from 'react-icons/fa'
 import useAuthToken from '../../hooks/useAuthToken'
 
 import { fetchUploadUrl } from '../../services/api'
@@ -52,10 +54,12 @@ const UploadPage = () => {
   }
 
   return <div>
-    Pick file.
-    <input type="file" accept="image/*" capture="camera" onChange={onFilePicked} />
-    {loading && 'Loading...'}
-    {imageUrl && <img src={imageUrl} />}
+    <div>
+      {imageUrl == null && <div style={{ margin: 30 }}><input type="file" accept="image/*" capture="camera" onChange={onFilePicked} /></div>}
+      {loading && 'Loading...'}
+      {imageUrl && <img src={imageUrl} />}
+    </div>
+    <Link href={`/stream?id=${streamId}`}><div style={{ marginTop: 30 }}><FaChevronLeft />Back to stream</div></Link>
   </div>
 }
 
