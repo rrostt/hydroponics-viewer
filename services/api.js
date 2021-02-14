@@ -6,6 +6,7 @@ const GET_TOKEN = `${API_BASE}/token`
 const GET_IMAGES = (streamId, from, to) => `${API_BASE}/streams/${streamId}/images?from=${from}&to=${to}`
 const STREAM_INFO_URL = streamId => `${API_BASE}/streams/${streamId}`
 const UPDATE_STREAM = `${API_BASE}/streams`
+const GET_UPLOAD_URL = `${API_BASE}/uploadUrl`
 
 export const fetchStreams = ({ token }) =>
   fetch(
@@ -92,3 +93,20 @@ export const updateStream = ({ token, streamId, title, description }) =>
       body: JSON.stringify({ id: streamId, title, description })
     }
   )
+
+export const fetchUploadUrl = ({ token, streamId, fileType }) =>
+  fetch(
+    GET_UPLOAD_URL,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        streamId,
+        fileType
+      })
+    }
+  )
+  .then(response => response.json())

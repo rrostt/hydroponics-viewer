@@ -53,7 +53,7 @@ const Stream = ({ streamId }) => {
         <Link href={`/streams/edit?id=${streamId}`}><span className={styles.actionIcon}><FaEdit /></span></Link>
       </h1>      
       { showImages.length > 0 ? <Anim images={showImages} /> : null}
-      { showImages.length == 0 && info?.owner && <NoImagesYet />}
+      { showImages.length == 0 && info?.owner && <NoImagesYet streamId={ streamId } />}
       <p>{ info && info.description }</p>
     </div>
 }

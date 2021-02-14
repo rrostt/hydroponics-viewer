@@ -22,6 +22,7 @@ module.exports = {
         "react/react-in-jsx-scope": 0,
     },
     "globals": {
-        "process": true
+        "process": true,
+        "Buffer": true,
     }
 };
