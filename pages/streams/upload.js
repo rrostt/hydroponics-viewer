@@ -82,6 +82,7 @@ const UploadPage = () => {
     </div>
     <div className={styles.images}>
       {images && images.map((image, i) => <img ref={i == images.length - 1 && lastImage || (() => {})} key={`${image.url}`} style={{ height: 60 }} src={image.url} />)}
+      { images && images.length === 0 && 'Stream is empty' }
     </div>
   </div>
 }
