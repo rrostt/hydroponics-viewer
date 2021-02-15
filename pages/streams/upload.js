@@ -78,7 +78,7 @@ const UploadPage = () => {
         <input ref={fileInput} type="file" accept="image/*" capture="camera" onChange={onFilePicked} />
       </div>}
       {loading && 'Loading...'}
-      {imageUrl && <img src={imageUrl} />}
+      {imageUrl && <img style={{ width: '100%' }} src={imageUrl} />}
     </div>
     <div className={styles.images}>
       {images && images.map((image, i) => <img ref={i == images.length - 1 && lastImage || (() => {})} key={`${image.url}`} style={{ height: 60 }} src={image.url} />)}
