@@ -1,12 +1,10 @@
-import { useState, useEffect, useCallback, } from 'react'
 import Link from 'next/link'
 import dayjs from 'dayjs'
 
 import Anim from './Anim'
 
-import useAuthToken from '../hooks/useAuthToken'
 import useStreamInfo from '../hooks/api/useStreamInfo'
-import { fetchImages, } from '../services/api'
+import useImages from '../hooks/api/useImages'
 
 import {
   FaEdit,
@@ -15,27 +13,6 @@ import {
 import NoImagesYet from './NoImagesYet'
 
 import styles from '../styles/Home.module.css'
-
-const useImages = ({ from, to, streamId }) => {
-  const token = useAuthToken()
-  const [images, setImages] = useState([])
-
-  const doFetchImages = useCallback(() =>
-    fetchImages({ token, streamId, from, to })
-      .then(images => setImages(images))
-    , [from, to, streamId])
-
-  useEffect(() => {
-    doFetchImages()
-  }, [streamId])
-
-  useEffect(() => {
-    const interval = setInterval(doFetchImages, 1000 * 60 * 1) // every minute
-    return () => clearInterval(interval)
-  }, [streamId, doFetchImages])
-
-  return images
-}
 
 const Stream = ({ streamId }) => {
   const from = '2020-12-24' // dayjs.utc().startOf('day').subtract(2, 'day').format() // '2020-12-23'
