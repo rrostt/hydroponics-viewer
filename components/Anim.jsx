@@ -52,13 +52,13 @@ const Anim = ({ images }) => {
   const timelineImageDivide = images.length > 80 ? 4 : images.length > 40 ? 3 : images.length > 20 ? 2 : 1
   const numThumbs = Math.ceil(images.length / timelineImageDivide)
   const thumbContainerWidth = `${100 / numThumbs}%`
-  // const thumbWidth = timelineImageDivide > 1 ? `${100 / numThumbs}%` : ''
   const thumbWidth = timelineImageDivide > 1 ? `100%` : ''
   const thumbPos = index => `${index * 100 / numThumbs}%`
 
   return <div>
     <div onClick={onClick} style={{ position: 'relative' }}>
-      <img className={styles.frameImage} src={images[frame % images.length].url} />
+      {/* <img className={styles.frameImage} src={images[frame % images.length].url} /> */}
+      <div className={styles.frameImage} style={{ backgroundImage: `url(${images[frame % images.length].url})`}} />
       <div className={styles.datestamp}><div className={styles.datestampContent}>{dayjs(images[frame % images.length].time).format('YYYY-MM-DD HH:mm')}</div></div>
       <div className={styles.controlbar}>
         <div className={styles.sliderContainer}>
