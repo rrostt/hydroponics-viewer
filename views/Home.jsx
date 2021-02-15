@@ -8,7 +8,6 @@ dayjs.extend(utc)
 
 import styles from '../styles/Home.module.css'
 
-// import { useGoogleLogin } from 'react-google-login'
 import { useGoogleLogin } from 'react-use-googlelogin'
 
 import Dashboard from '../views/Dashboard'

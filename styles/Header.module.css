@@ -10,4 +10,13 @@
   margin: 0 auto;
   padding: 20px 0 5px 0px;
   color: rgb(180,180,180);
+  display: flex;
+}
+
+.headerTitle {
+  flex: 1;
+}
+
+.headerActions {
+  flex: 0;
 }
