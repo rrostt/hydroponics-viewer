@@ -97,10 +97,19 @@
   border-radius: 5px;
 }
 
+.sliderThumbContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 30px;
+}
+
 .sliderThumbnail {
   display: inline-block;
   height: 30px;
   margin: 10px 0;
+  position: absolute;
 }
 
 .plantThumb {

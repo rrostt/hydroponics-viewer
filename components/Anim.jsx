@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import styles from '../styles/Home.module.css'
 
 const Anim = ({ images }) => {
-  const [frame, setFrame] = useState(images.length - 1)
+  const [frame, setFrame] = useState(0)
   const [playing, setPlaying] = useState(true)
 
   const nextFrame = useCallback(() => {
@@ -20,6 +20,7 @@ const Anim = ({ images }) => {
   }, [images, setFrame, playing])
 
   const onChange = useCallback(e => {
+    console.log(e.target.value)
     setPlaying(false)
     setFrame(+e.target.value)
   }, [setPlaying, setFrame])
@@ -39,15 +40,22 @@ const Anim = ({ images }) => {
   }, [playing, nextFrame])
 
   // always show last frame as new images appear
-  useEffect(() => {
-    if (!playing && frame == images.length - 2) {
-      setFrame(images.length - 1)
-    }
-  }, [playing, frame, images])
+  // useEffect(() => {
+  //   if (!playing && frame == images.length - 2) {
+  //     setFrame(images.length - 1)
+  //   }
+  // }, [playing, frame, images])
 
   if (images.length == 0) {
     return <div>Loading...</div>
   }
+
+  const timelineImageDivide = images.length > 80 ? 4 : images.length > 40 ? 3 : images.length > 20 ? 2 : 1
+  const numThumbs = Math.ceil(images.length / timelineImageDivide)
+  const thumbContainerWidth = `${100 / numThumbs}%`
+  // const thumbWidth = timelineImageDivide > 1 ? `${100 / numThumbs}%` : ''
+  const thumbWidth = timelineImageDivide > 1 ? `100%` : ''
+  const thumbPos = index => `${index * 100 / numThumbs}%`
 
   return <div>
     <div onClick={onClick} style={{ position: 'relative' }}>
@@ -56,7 +64,7 @@ const Anim = ({ images }) => {
       <div className={styles.controlbar}>
         <div className={styles.sliderContainer}>
           <div className={styles.sliderContainerInner}>
-            {images.filter((_, i) => i % 3 === 0).map(({ url }) => <img key={`sliderimg-${url}`} className={styles.sliderThumbnail} style={{ width: `${100 / Math.ceil(images.length / 3)}%` }} src={url} />)}
+            {images.filter((_, i) => i % timelineImageDivide === 0).map(({ url }, index) => <div key={`sliderimg-${url}`} className={styles.sliderThumbContainer} style={{ left: thumbPos(index), width: thumbContainerWidth }}><img className={styles.sliderThumbnail} style={{ width: thumbWidth }} src={url} /></div>)}
             <input className={styles.slider} type='range' min={0} max={images.length - 1} value={frame} onChange={onChange} /><br />
           </div>
         </div>
