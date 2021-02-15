@@ -1,10 +1,13 @@
-import { useState } from 'react'
-import Link from 'next/Link'
+import { useState, useRef, useEffect } from 'react'
+import Link from 'next/link'
 
 import { FaChevronLeft } from 'react-icons/fa'
 import useAuthToken from '../../hooks/useAuthToken'
 
 import { fetchUploadUrl } from '../../services/api'
+
+import styles from '../../styles/Upload.module.css'
+import useImages from '../../hooks/api/useImages'
 
 const getSearchParam = name => {
   if (typeof window === 'undefined') {
@@ -20,15 +23,24 @@ const UploadPage = () => {
   const streamId = getSearchParam('id')
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState(null)
+  const fileInput = useRef()
+  const lastImage = useRef()
+  const images = useImages({ streamId, from: '2020-01-01', to: '2034-01-01' })
+
+  useEffect(() => {
+    if (lastImage?.current) {
+      lastImage.current.scrollIntoView()
+    }
+  }, [lastImage.current])
 
   const onFilePicked = async e => {
     const file = e.target.files[0]
 
     console.log(file)
-
+    
     setLoading(true)
 
-    const uploadUrl = await fetchUploadUrl({ token, streamId, fileType: `.${file.type.split('/').slice(-1)}` })
+    const uploadUrl = await fetchUploadUrl({ token, streamId, fileType: file.type })
 
     const uploadBuffer = (buffer) => {
       fetch(uploadUrl.uploadUrl, {
@@ -53,13 +65,24 @@ const UploadPage = () => {
     reader.readAsArrayBuffer(file)
   }
 
-  return <div>
+  const pickImage = () => {
+    fileInput.current.click()
+  }
+
+  return <div className={styles.uploadPage}>
+    <Link href={`/stream?id=${streamId}`}><div style={{ marginTop: 30 }}><FaChevronLeft />Back to stream</div></Link>
+    <h1>Add image to stream</h1>
     <div>
-      {imageUrl == null && <div style={{ margin: 30 }}><input type="file" accept="image/*" capture="camera" onChange={onFilePicked} /></div>}
+      {imageUrl == null && <div className={styles.uploadContainer}>
+        <button onClick={pickImage}>Take picture</button>
+        <input ref={fileInput} type="file" accept="image/*" capture="camera" onChange={onFilePicked} />
+      </div>}
       {loading && 'Loading...'}
       {imageUrl && <img src={imageUrl} />}
     </div>
-    <Link href={`/stream?id=${streamId}`}><div style={{ marginTop: 30 }}><FaChevronLeft />Back to stream</div></Link>
+    <div className={styles.images}>
+      {images && images.map((image, i) => <img ref={i == images.length - 1 && lastImage || (() => {})} key={`${image.url}`} style={{ height: 60 }} src={image.url} />)}
+    </div>
   </div>
 }
 
