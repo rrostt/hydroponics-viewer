@@ -30,8 +30,10 @@ const Stream = ({ streamId }) => {
   return <div className={styles.container}>
       <h1>
         { info?.title }
-        <Link href={`/streams/edit?id=${streamId}`}><span className={styles.actionIcon}><FaEdit /></span></Link>
-        <Link href={`/streams/upload?id=${streamId}`}><span className={styles.actionIcon}><FaCloudUploadAlt /></span></Link>
+        { info?.owner && <>
+          <Link href={`/streams/edit?id=${streamId}`}><span className={styles.actionIcon}><FaEdit /></span></Link>
+          <Link href={`/streams/upload?id=${streamId}`}><span className={styles.actionIcon}><FaCloudUploadAlt /></span></Link>
+        </> }
         
       </h1>      
       { showImages.length > 0 ? <Anim images={showImages} /> : null}
