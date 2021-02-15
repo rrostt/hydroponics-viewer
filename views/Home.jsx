@@ -46,7 +46,6 @@ const SignIn = () => {
   })
 
   useEffect(() => {
-    console.log({ googleUser })
     if (isSignedIn && googleUser) {
       onSuccess(googleUser)
     } 

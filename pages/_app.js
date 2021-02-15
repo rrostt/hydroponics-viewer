@@ -12,6 +12,7 @@ dayjs.extend(isBetween)
 dayjs.extend(utc)
 
 const DynamicLoggedInFooter= dynamic(() => import('../components/LoggedInFooter'), { ssr: false})
+import Header from '../components/Header'
 
 import '../styles/globals.css'
 
@@ -24,6 +25,7 @@ function MyApp({ Component, pageProps }) {
   }
 
   return <AuthContext.Provider value={auth}>
+    <Header />
     <Component {...pageProps} />
     { token && <DynamicLoggedInFooter />}
   </AuthContext.Provider>

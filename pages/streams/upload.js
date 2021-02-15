@@ -36,8 +36,6 @@ const UploadPage = () => {
   const onFilePicked = async e => {
     const file = e.target.files[0]
 
-    console.log(file)
-    
     setLoading(true)
 
     const uploadUrl = await fetchUploadUrl({ token, streamId, fileType: file.type })
@@ -49,8 +47,7 @@ const UploadPage = () => {
           'Content-Type': file.type
         },
         body: buffer
-      }).then(response => {
-        console.log(response)
+      }).then(() => {
         setImageUrl(uploadUrl.downloadUrl)
       }).catch(e => {
         console.log(e)
@@ -59,7 +56,6 @@ const UploadPage = () => {
 
     const reader = new FileReader()
     reader.onload = () => {
-      console.log(reader.result)
       uploadBuffer(reader.result)
     }
     reader.readAsArrayBuffer(file)

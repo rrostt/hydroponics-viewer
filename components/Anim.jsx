@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import dayjs from 'dayjs'
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Anim.module.css'
 
 const Anim = ({ images }) => {
   const [frame, setFrame] = useState(0)
@@ -20,7 +20,6 @@ const Anim = ({ images }) => {
   }, [images, setFrame, playing])
 
   const onChange = useCallback(e => {
-    console.log(e.target.value)
     setPlaying(false)
     setFrame(+e.target.value)
   }, [setPlaying, setFrame])

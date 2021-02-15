@@ -70,7 +70,7 @@ export const fetchToken = tokenId =>
   .then(response => response.json())
 
 export const fetchImages = ({ token, streamId, from, to }) =>
-  console.log('fetch', GET_IMAGES(streamId)) || fetch(
+  fetch(
     GET_IMAGES(streamId, from, to),
     {
       headers: {

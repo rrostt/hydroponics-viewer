@@ -1,8 +1,11 @@
 import { useState, useCallback, useEffect, } from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
+
 import useAuthToken from '../hooks/useAuthToken'
 import { fetchStreamInfo, updateStream } from '../services/api'
 
+import { FaChevronLeft } from 'react-icons/fa'
 import styles from '../styles/EditStream.module.css'
 
 const useStreamInfo = ({ streamId }) => {
@@ -20,7 +23,6 @@ const Form = ({ title, description, onSave, saving }) => {
   const [descValue, setDesc] = useState(description)
 
   const submit = useCallback(() => {
-    console.log('submit')
     onSave({ title: titleValue, description: descValue })
   }, [titleValue, descValue])
 
@@ -50,6 +52,7 @@ const EditStream = ({ streamId }) => {
   }
 
   return <div className={styles.editStream}>
+    <Link href={`/stream?id=${streamId}`}><div style={{ marginTop: 30 }}><FaChevronLeft />Back to stream</div></Link>
     <h1>Edit stream</h1>
     {info && <Form {...info} onSave={save} saving={saving} />}
     <div className={styles.bottom}>

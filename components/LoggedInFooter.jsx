@@ -13,11 +13,6 @@ const SignOut = () => {
   const { setToken } = useContext(AuthContext)
   const { signOut } = useGoogleLogin({
     clientId: GOOGLE_CLIENT_ID,
-    // onLogoutSuccess: (x) => {
-    //   console.log(x)
-    //   setToken(null)
-    // },
-    // onFailure: (e) => console.log('failure', e),
   })
   
   const doSignOut = async () => {

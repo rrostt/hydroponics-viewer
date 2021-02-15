@@ -12,7 +12,7 @@ import {
 } from 'react-icons/fa'
 import NoImagesYet from './NoImagesYet'
 
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Stream.module.css'
 
 const Stream = ({ streamId }) => {
   const from = '2020-12-24' // dayjs.utc().startOf('day').subtract(2, 'day').format() // '2020-12-23'
