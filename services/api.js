@@ -7,6 +7,7 @@ const GET_IMAGES = (streamId, from, to) => `${API_BASE}/streams/${streamId}/imag
 const STREAM_INFO_URL = streamId => `${API_BASE}/streams/${streamId}`
 const UPDATE_STREAM = `${API_BASE}/streams`
 const GET_UPLOAD_URL = `${API_BASE}/uploadUrl`
+const DELETE_STREAM = streamId => `${API_BASE}/streams/${streamId}`
 
 export const fetchStreams = ({ token }) =>
   fetch(
@@ -110,3 +111,15 @@ export const fetchUploadUrl = ({ token, streamId, fileType }) =>
     }
   )
   .then(response => response.json())
+
+export const deleteStream = ({ token, streamId }) =>
+  fetch(
+    DELETE_STREAM(streamId),
+    {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    }
+  )

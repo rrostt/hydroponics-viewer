@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 import useAuthToken from '../hooks/useAuthToken'
-import { fetchStreamInfo, updateStream } from '../services/api'
+import { fetchStreamInfo, updateStream, deleteStream } from '../services/api'
 
 import { FaChevronLeft } from 'react-icons/fa'
 import styles from '../styles/EditStream.module.css'
@@ -51,10 +51,20 @@ const EditStream = ({ streamId }) => {
     setSaving(false)
   }
 
+  const onDelete = async () => {
+    const confirmed = confirm('Are you sure you want to delete this stream?')
+    if (confirmed) {
+      console.log('will delete')
+      await deleteStream({ token, streamId })
+      router.push('/')
+    }
+  }
+
   return <div className={styles.editStream}>
     <Link href={`/stream?id=${streamId}`}><div style={{ marginTop: 30 }}><FaChevronLeft />Back to stream</div></Link>
     <h1>Edit stream</h1>
     {info && <Form {...info} onSave={save} saving={saving} />}
+    <button className={styles.deleteButton} onClick={onDelete}>Delete stream</button>
     <div className={styles.bottom}>
       <img src='/undraw_Reviewed_docs.svg' />
     </div>
