@@ -90,7 +90,7 @@ const Anim = ({ images }) => {
   // always show last frame as new images appear
   // useEffect(() => {
   //   if (!playing && frame == images.length - 2) {
-  //     setFrame(images.length - 1)
+  //     setFrame(images.length - 1) 
   //   }
   // }, [playing, frame, images])
 
