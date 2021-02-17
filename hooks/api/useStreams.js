@@ -13,7 +13,7 @@ const useStreams = () => {
         if (streams.error) {
           //
         } else {
-          setStreams(streams.sort((a, b) => a?.latest?.time > b?.latest?.time ? -1 : 1))
+          setStreams(streams.sort((a, b) => (a?.latest?.time || "1") > (b?.latest?.time || "1") ? -1 : 1))
         }
       })
   }, [])
