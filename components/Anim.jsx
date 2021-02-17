@@ -108,8 +108,7 @@ const Anim = ({ images }) => {
 
   // console.log('image url', images[frame % images.length].url)
 
-  return <div>
-    <div onClick={onClick} style={{ position: 'relative' }}>
+  return <div className={styles.anim} onClick={onClick} style={{ position: 'relative' }}>
       <img className={styles.frameImage} src={images[frame % images.length].url} />
       {/* <div className={styles.frameImage} style={{ backgroundImage: `url(${images[frame % images.length].url})`}} /> */}
       <div className={styles.datestamp}><div className={styles.datestampContent}>{dayjs(images[frame % images.length].time).format('YYYY-MM-DD HH:mm')}</div></div>
@@ -117,7 +116,6 @@ const Anim = ({ images }) => {
         <AnimSlider images={images} frame={frame} onChange={onChange} />
       </div>
     </div>
-  </div>
 }
 
 export default Anim
