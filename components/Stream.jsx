@@ -14,6 +14,11 @@ import NoImagesYet from './NoImagesYet'
 
 import styles from '../styles/Stream.module.css'
 
+const Description = ({ children }) => {
+  console.log(children)
+  return children.split('\n\n').map((para, i) => <p key={i}>{para}</p>)
+}
+
 const Stream = ({ streamId }) => {
   const from = '2020-12-24' // dayjs.utc().startOf('day').subtract(2, 'day').format() // '2020-12-23'
   const to = dayjs.utc().endOf('day').format() // '2020-12-24'
@@ -38,7 +43,7 @@ const Stream = ({ streamId }) => {
       </h1>      
       { showImages.length > 0 ? <Anim images={showImages} /> : null}
       { showImages.length == 0 && info?.owner && <NoImagesYet streamId={ streamId } />}
-      <p>{ info && info.description }</p>
+      { info && <Description>{info.description}</Description> }
     </div>
 }
 
