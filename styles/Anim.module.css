@@ -78,7 +78,9 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
   height: 30px;
+  margin-top: 8px;
 }
 
 .sliderThumbnail {
@@ -86,4 +88,11 @@
   height: 30px;
   margin: 10px 0;
   position: absolute;
+}
+
+.dot {
+  width: 2px;
+  height: 2px;
+  background-color: black;
+  border-radius: 1px;
 }

@@ -32,7 +32,7 @@ const AnimSlider = ({ images, frame, onChange }) => {
             className={styles.sliderThumbnail}
             style={{ width: thumbWidth }}
             src={url}
-          /> }
+          /> || <div className={styles.dot} />}
         </div>
       )}
       <input
