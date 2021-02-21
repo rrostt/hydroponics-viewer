@@ -11,12 +11,21 @@ import styles from '../styles/Home.module.css'
 import { useGoogleLogin } from 'react-use-googlelogin'
 
 import Dashboard from '../views/Dashboard'
+import StreamThumb from '../components/StreamThumb'
 
 import { fetchToken } from '../services/api'
+import useFeatured from '../hooks/api/useFeatured'
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
 
 import AuthContext from '../contexts/auth'
+
+const Featured = () => {
+  const featured = useFeatured()
+  return <div className={styles.featured}>
+      { featured && featured.map(stream => <StreamThumb key={stream.id} stream={stream} />)}
+  </div>
+}
 
 const SignIn = () => {
   const { setToken } = useContext(AuthContext)
@@ -65,6 +74,7 @@ const SignIn = () => {
 
   return <div className={styles.loginPage}>
     <button onClick={doSignIn} disabled={loading}>Sign in with Google</button>
+    <Featured />
   </div>
 }
 

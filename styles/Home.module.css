@@ -15,11 +15,11 @@
 .loginPage {
   width: 100%;
   max-width: 600px;
-  height: 70px;
   margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .loginPage button {
@@ -46,4 +46,8 @@
 
 .loginPage button:focus {
   outline: none;
+}
+
+.featured {
+  margin-top: 60px;
 }
