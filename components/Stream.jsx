@@ -23,7 +23,7 @@ const Stream = ({ streamId }) => {
   const from = '2020-12-24' // dayjs.utc().startOf('day').subtract(2, 'day').format() // '2020-12-23'
   const to = dayjs.utc().endOf('day').format() // '2020-12-24'
 
-  const days = 7
+  const days = 100
 
   const info = useStreamInfo({ streamId })
   const images = useImages({ from, to, streamId: streamId || '' })
